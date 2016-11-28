@@ -13,7 +13,7 @@ public class Robot {
 		RemoteEV3 ev3;
 		static RMIRegulatedMotor motorB;
 		static RMIRegulatedMotor motorC;
-		
+		static boolean stop = false;
 	public static void main(String[] args) throws RemoteException, MalformedURLException, NotBoundException  {
 		// TODO Auto-generated method stub
 		// Creates the remote ev3
@@ -25,28 +25,43 @@ public class Robot {
 		ev3.getPort("C");
 		
 		// creates motors
-		if(motorB==null){ev3.createRegulatedMotor("B", 'L');}
-		if(motorC==null){ev3.createRegulatedMotor("C", 'L');}
+		
+		if(motorB==null){motorB = ev3.createRegulatedMotor("B", 'L');}
+		if(motorC==null){motorC = ev3.createRegulatedMotor("C", 'L');}
 		
 		//lets move some motors
-		motorB.forward();
-		motorC.forward();
+		
+		
+		while(!stop){
+			motorB.forward();
+			motorC.forward();
+			timer();
+			motorB.stop(true);
+			motorC.stop(true);
+			stop = true;
+		
+		}
+		motorB.stop(true);
+		motorC.stop(true);
+		//beep because its nice to know we are done
+		Sound.twoBeeps();
+		
+		if(!stop){
+			//close ports. Must be completed every time
+			motorB.close();
+			motorC.close();
+		}
+	}
+	
+	public static void timer(){
 		try{
-			Thread.sleep(5000);
+			Thread.sleep(1000);
 		}
 		catch(InterruptedException e){
 			e.printStackTrace();
-		}
-		
-		motorB.stop(true);
-		motorC.stop(true);
-		
-		//beep because its nice to know we are done
-		Sound.twoBeeps();
-		//close ports. Must be completed every time
-		motorB.close();
-		motorC.close();
-		
+		}	
 	}
+	
 
 }
+
