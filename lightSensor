@@ -1,0 +1,21 @@
+package light;
+import lejos.robotics.SampleProvider;
+import lejos.robotics.filter.AbstractFilter;
+
+public class Lightsensor extends AbstractFilter{
+	float[] sample;
+	
+	public Lightsensor(SampleProvider source){
+		super(source);
+		sample = new float[sampleSize];
+	}
+	
+	public boolean pressed(){
+		super.fetchSample(sample, 0);
+		if(sample[0] >= 1.9){
+			return false;
+		} else {
+			return true;
+		}
+	}
+}
