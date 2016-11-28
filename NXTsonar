@@ -1,0 +1,47 @@
+package light;
+
+import lejos.hardware.Brick;
+import lejos.hardware.BrickFinder;
+import lejos.hardware.motor.Motor;
+import lejos.hardware.part.Part;
+import lejos.hardware.sensor.EV3UltrasonicSensor;
+import lejos.hardware.sensor.NXTLightSensor;
+import lejos.hardware.sensor.EV3TouchSensor;
+////////////
+import lejos.hardware.sensor.NXTTouchSensor;
+
+public class SensorTest {
+	static Ultrasonic sonar;
+	static Lightsensor light;
+	static Touchsensor touch;
+	static Ultrasonic sonar_1;
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Brick b = BrickFinder.getDefault();
+		Port s1 = b.getPort("S1");
+		Port s2 = b.getPort("S2");
+		Port s4 = b.getPort("S4");
+		
+		Port s3 = b.getPort("S3");
+		NXTLightSensor NXTlight = new NXTLightSensor(s1);
+		EV3UltrasonicSensor EV3sonar = new EV3UltrasonicSensor(s4);
+		EV3TouchSensor EV3touch = new EV3TouchSensor(s2);
+		
+		NXTUltrasonicSensor NXTsonar = new NXTUltrasonicSensor(s3);
+		
+		sonar = new Ultrasonic(EV3sonar.getMode("Distance"));
+		touch = new Touchsensor(EV3touch);
+		light = new Lightsensor(NXTlight);
+		sonar_1 = new Ultrasonic(NXTsonar.getMode("Distance"));
+		
+		if(sonar.distance() < 0.45){
+		}
+		if(touch.pressed()){
+		}
+		if(light.getlight()){
+		}
+			
+	}
+
+}
