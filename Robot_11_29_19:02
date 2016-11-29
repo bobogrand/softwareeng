@@ -40,6 +40,9 @@ public class Robot {
 		public static final boolean WHITE = false;
 		public static final boolean TOUCHED = true;
 		public static final boolean UNTOUCHED = false;
+		
+		public static final boolean D = true;
+		public static final boolean A = false;
 	
 		RemoteEV3 ev3;	
 		/** motor part */
@@ -66,8 +69,18 @@ public class Robot {
 		static Port s4;
 		/** test case */
 		
-		public static void test() {
-			rotate(35);
+		public static void test(boolean flag) {
+		
+			if(flag == D) {
+				while(true) {
+					if(light.get_light() == WHITE){
+						return_back();
+					}
+					rotate(100);
+					motor(FORWARD,0);
+					sleep(200);
+				}			
+			}
 			//motor(FORWARD,0);	
 			//sleep(10000);
 			//rotate();
@@ -89,7 +102,7 @@ public class Robot {
 					break;
 				}
 			}
-			sleep(500);
+			sleep(200);
 		}
 		public static void rotate(int speed){
 			pilot.setRotateSpeed(speed);
@@ -103,10 +116,7 @@ public class Robot {
 				}
 			}
 		}
-		
-		/*end tesr**/
-		
-		
+		/*end tesr**/		
 		// init
 	public static void init(){
 		// set speed
@@ -139,7 +149,7 @@ public class Robot {
 		init();
 		
 		//return_back();
-		test();
+		test(D);
 		return;
 		
 	}
@@ -169,13 +179,8 @@ public class Robot {
 			pilot.arc(3, angle);
 			break;
 		case RANDOM:
-			
-			
-			
 			break;
 		}
-
-		
 	}
 	
 	
