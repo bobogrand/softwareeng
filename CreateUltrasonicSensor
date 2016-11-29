@@ -1,19 +1,23 @@
-package light;
-
+package fighting_robot;
 import lejos.robotics.SampleProvider;
 import lejos.robotics.filter.AbstractFilter;
 
-public class Ultrasonic extends AbstractFilter {
+public class LightSensor extends AbstractFilter{
+	public static final boolean BLACK = true;
+	public static final boolean WHITE = false;
 	
 	float[] sample;
-	
-	public Ultrasonic(SampleProvider source) {
+	public LightSensor(SampleProvider source){
 		super(source);
 		sample = new float[sampleSize];
 	}
 	
-	public float distance() {
+	public boolean pressed(){
 		super.fetchSample(sample, 0);
-		return sample[0];
+		if(sample[0] >= 0.45){
+			return WHITE;
+		} else {
+			return BLACK;
+		}
 	}
 }
