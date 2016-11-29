@@ -1,0 +1,193 @@
+package fighting_robot;
+
+
+import java.net.MalformedURLException;
+import java.rmi.RemoteException;
+import java.rmi.NotBoundException;
+
+import lejos.hardware.Brick;
+import lejos.hardware.BrickFinder;
+import lejos.hardware.Sound;
+import lejos.hardware.motor.Motor;
+import lejos.hardware.port.Port;
+import lejos.hardware.sensor.EV3TouchSensor;
+import lejos.hardware.sensor.NXTLightSensor;
+import lejos.hardware.sensor.NXTUltrasonicSensor;
+import lejos.remote.ev3.RemoteEV3;
+
+
+import lejos.robotics.navigation.DifferentialPilot;
+import lejos.robotics.RegulatedMotor;
+import lejos.robotics.Touch;
+
+
+import lejos.hardware.sensor.EV3UltrasonicSensor;
+import lejos.hardware.sensor.NXTLightSensor;
+import lejos.hardware.sensor.EV3TouchSensor;
+
+
+public class Robot {
+		
+	//direction constant
+		public static final int FORWARD  = 0;
+		public static final int BACKWARD = 1;
+		public static final int ROTATE = 2;
+		public static final int TURN_LEFT = 3;
+		public static final int TURN_RIGHT = 4;
+		public static final int RANDOM = 7;
+		
+		public static final boolean BLACK = true;
+		public static final boolean WHITE = false;
+		public static final boolean TOUCHED = true;
+		public static final boolean UNTOUCHED = false;
+	
+		RemoteEV3 ev3;	
+		/** motor part */
+		public static RegulatedMotor Left = Motor.B;	//LEFT MOTOR
+		public static RegulatedMotor Right = Motor.C;	//RIGHT MOTOR
+		
+		// now state
+		public static DifferentialPilot pilot; 
+		public static int speed;
+		//public static boolean line;
+		public static Lightsensor Light;
+		
+
+		static Lightsensor light;
+		static Touchsensor touch;
+		static Sonarsensor sonar_NXT;
+		static Sonarsensor sonar_EV3;
+		
+		static Brick b;
+		
+		static Port s1;
+		static Port s2;
+		static Port s3;
+		static Port s4;
+		/** test case */
+		
+		public static void test() {
+			rotate(35);
+			//motor(FORWARD,0);	
+			//sleep(10000);
+			//rotate();
+			/*if(sonar_NXT.distance() <= 0.40){
+				Sound.twoBeeps();
+				sleep(2000);
+			}
+			if(sonar_EV3.distance() >= 0.40){
+				Sound.twoBeeps();
+				sleep(2000);
+			}*/
+				
+		}
+		public static void return_back(){
+			motor(BACKWARD,0);
+			while(true){
+				if(light.get_light() == BLACK){
+					Sound.twoBeeps();
+					break;
+				}
+			}
+			sleep(500);
+		}
+		public static void rotate(int speed){
+			pilot.setRotateSpeed(speed);
+			pilot.rotateLeft();
+			while(true){
+				//motor(ROTATE,180);
+				if(sonar_EV3.distance() <=0.30){
+					Sound.twoBeeps();
+					pilot.stop();
+					break;
+				}
+			}
+		}
+		
+		/*end tesr**/
+		
+		
+		// init
+	public static void init(){
+		// set speed
+		speed = 150;
+		pilot = new DifferentialPilot(1.5f,6,Left,Right);	//POINT
+		// TODO Auto-generated method stub
+		b = BrickFinder.getDefault();
+		s1 = b.getPort("S1");
+		s2 = b.getPort("S2");
+		s3 = b.getPort("S3");
+		s4 = b.getPort("S4");
+		NXTLightSensor NXTlight = new NXTLightSensor(s1);
+		EV3TouchSensor EV3touch = new EV3TouchSensor(s2);
+		NXTUltrasonicSensor NXTsonar = new NXTUltrasonicSensor(s3);
+		EV3UltrasonicSensor EV3sonar = new EV3UltrasonicSensor(s4);
+		
+		sonar_NXT = new Sonarsensor(NXTsonar.getMode("Distance"));
+		sonar_EV3 = new Sonarsensor(EV3sonar.getMode("Distance"));
+		touch = new Touchsensor(EV3touch);
+		light = new Lightsensor(NXTlight);
+		
+		//if(sonar.distance() < 0.45){
+		//}
+		return;
+	}
+		
+	/** main function */ 
+	public static void main(String[] args) throws RemoteException, MalformedURLException, NotBoundException  {
+		
+		init();
+		
+		//return_back();
+		test();
+		return;
+		
+	}
+	
+	
+	public static void motor(int move, int angle){
+		pilot.setTravelSpeed(speed);
+		switch(move){
+		//Forward
+		case FORWARD:
+			pilot.forward();
+			break;
+		//backward
+		case BACKWARD:
+			pilot.backward();
+			break;
+		//rotate
+		case ROTATE:
+			pilot.rotate(angle);
+			break;
+		//turn left
+		case TURN_LEFT:
+			pilot.arc(-3, -angle);
+			break;
+		//turn right
+		case TURN_RIGHT:
+			pilot.arc(3, angle);
+			break;
+		case RANDOM:
+			
+			
+			
+			break;
+		}
+
+		
+	}
+	
+	
+
+	
+	public static void sleep(int time){
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+}
