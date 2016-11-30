@@ -29,6 +29,10 @@ import lejos.utility.Stopwatch;
 
 import java.util.Random;
 
+import goym.Lightsensor;
+import goym.Sonarsensor;
+import goym.Touchsensor;
+
 public class Robot {
 		
 	//direction constant
@@ -74,6 +78,8 @@ public class Robot {
 		static Stopwatch timer;
 		/** test case */
 		
+		
+		// this mode is defence
 		public static void test(boolean flag) {
 			if(flag == D) {
 				while(true) {
@@ -111,19 +117,18 @@ public class Robot {
 			pilot.setRotateSpeed(speed);
 			pilot.rotateLeft();
 			while(true){
+				
+				// background color first
 				if(light.get_light() == WHITE){
 					Sound.beep();
 					return_back();
 					pilot.setRotateSpeed(speed);
 					pilot.rotateLeft();
 				}
+				
+				// distance second
+				
 				if(sonar_EV3.distance() <=0.50){
-					DEF();
-					Sound.buzz();
-					pilot.stop();
-					break;
-				}
-				if(sonar_NXT.distance() <= 0.40){
 					DEF();
 					Sound.buzz();
 					pilot.stop();
@@ -141,19 +146,34 @@ public class Robot {
 		// init
 	public static void init(){
 		// set speed
-		pilot = new DifferentialPilot(1.5f,6,Left,Right);	//POINT
+		
 		// TODO Auto-generated method stub
 		b = BrickFinder.getDefault();
 		s1 = b.getPort("S1");
 		s2 = b.getPort("S2");
 		s3 = b.getPort("S3");
 		s4 = b.getPort("S4");
+		
+		
+		//set motor speed
+		Motor.B.setSpeed(36000);
+		Motor.C.setSpeed(36000);
+		Motor.A.setSpeed(36000);
+		Motor.B.setAcceleration(36000);
+		Motor.C.setAcceleration(36000);
+		Motor.A.setAcceleration(36000);
+		
+		
+		
+		/** NXT sonar sensor cancel */
+		//set sensor
+		pilot = new DifferentialPilot(1.5f,6,Left,Right);	//POINT
 		NXTLightSensor NXTlight = new NXTLightSensor(s1);
-		EV3TouchSensor EV3touch = new EV3TouchSensor(s2);
-		NXTUltrasonicSensor NXTsonar = new NXTUltrasonicSensor(s3);
+	//	EV3TouchSensor EV3touch = new EV3TouchSensor(s2);
+		//NXTUltrasonicSensor NXTsonar = new NXTUltrasonicSensor(s3);
 		EV3UltrasonicSensor EV3sonar = new EV3UltrasonicSensor(s4);
 		
-		sonar_NXT = new Sonarsensor(NXTsonar.getMode("Distance"));
+		//sonar_NXT = new Sonarsensor(NXTsonar.getMode("Distance"));
 		sonar_EV3 = new Sonarsensor(EV3sonar.getMode("Distance"));
 		touch = new Touchsensor(EV3touch);
 		light = new Lightsensor(NXTlight);
@@ -163,7 +183,7 @@ public class Robot {
 		
 		timer = new Stopwatch();
 		timer.reset();
-		speed = pilot.getMaxTravelSpeed();
+		
 		return;
 	}
 		
@@ -171,45 +191,55 @@ public class Robot {
 	public static void main(String[] args) throws RemoteException, MalformedURLException, NotBoundException  {
 		
 		init();
-		
 		//return_back();
 		test(D);
 		return;
-		
 	}
 	
-	
 	public static void motor(int move, int angle){
-		pilot.setTravelSpeed(speed);
+		//pilot.setTravelSpeed(speed);
+		// A motor stop;\
+		Back.backward();
+		
 		switch(move){
-		//Forward
-		case FORWARD:
-			pilot.forward();
-			break;
-		//backward
-		case BACKWARD:
-			pilot.backward();
-			break;
-		//rotate
-		case ROTATE:
-			pilot.rotate(angle);
-			break;
-		//turn left
-		case TURN_LEFT:
-			pilot.arc(-3, -angle);
-			break;
-		//turn right
-		case TURN_RIGHT:
-			pilot.arc(3, angle);
-			break;
-		case RANDOM:
-			Random rand = new Random();
-			int a = rand.nextInt(6);
-			int b = rand.nextInt(200);
-			a -=3; b-=100;
-			pilot.arc(a, b);
-			break;
-		}
+			//Forward
+			case FORWARD:
+				Motor.A.setSpeed(36000);
+				Motor.B.setSpeed(36000);
+				Motor.C.setSpeed(36000);
+				Motor.B.setAcceleration(36000);
+				Motor.C.setAcceleration(36000);
+				Left.forward();
+				Right.forward();
+				Back.backward();
+				//pilot.forward();
+					break;
+					//backward
+			case BACKWARD:
+				Motor.A.forward();
+				pilot.backward();
+					break;
+					//rotate
+			case ROTATE:
+				pilot.rotate(angle);
+					break;
+					//turn left
+			case TURN_LEFT:
+				pilot.arc(-3, -angle);
+					break;
+					//turn right
+			case TURN_RIGHT:
+				pilot.arc(3, angle);
+					break;
+			case RANDOM:
+				Random rand = new Random();
+				int a = rand.nextInt(6);
+				int b = rand.nextInt(200);
+				a -=3; b-=100;
+				pilot.arc(a, b);
+					break;
+			}
+			
 	}
 	
 	
