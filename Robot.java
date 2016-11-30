@@ -50,7 +50,8 @@ public class Robot {
 		
 		public static final boolean D = true;
 		public static final boolean A = false;
-	
+		public static final int ROTATE_DEGREE = 100;
+		// rotate degree
 		RemoteEV3 ev3;	
 		/** motor part */
 		public static RegulatedMotor Left = Motor.B;	//LEFT MOTOR
@@ -94,7 +95,7 @@ public class Robot {
 		public static void return_back(){
 			int elapsed_time;
 			//motor(BACKWARD,0);
-			motor(ROTATE,70);
+			motor(ROTATE,ROTATE_DEGREE);
 			motor(FORWARD,0);
 			int start_time = timer.elapsed();
 			while(true){
@@ -102,7 +103,7 @@ public class Robot {
 				if((elapsed_time - start_time) > 800){
 					Sound.beep();
 					pilot.stop();
-					motor(ROTATE,60);
+					motor(ROTATE,ROTATE_DEGREE);
 					motor(FORWARD,0);
 					start_time = timer.elapsed();
 				}
