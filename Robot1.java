@@ -51,6 +51,8 @@ public class Robot1 {
 	//mode constant	
 		public static final boolean D = true;
 		public static final boolean A = false;
+		
+		public static final int ROTATE_DEGREE = 140;
 	
 		RemoteEV3 ev3;	
 		/** motor part */
@@ -96,7 +98,7 @@ public class Robot1 {
 			int elapsed_time;
 			//motor(BACKWARD,0);
 			pilot.setRotateSpeed(100);
-			motor(ROTATE,70);
+			motor(ROTATE,ROTATE_DEGREE);
 			motor(FORWARD,0);
 			int start_time = timer.elapsed();
 			while(true){
@@ -104,7 +106,7 @@ public class Robot1 {
 				if((elapsed_time - start_time) > 800){
 					Sound.beep();
 					pilot.stop();
-					motor(ROTATE,60);
+					motor(ROTATE,ROTATE_DEGREE);
 					motor(FORWARD,0);
 					start_time = timer.elapsed();
 				}
